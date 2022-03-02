@@ -138,7 +138,7 @@ def all_damage_probabilities():
     atk_dice = create_default_atk_dice()
     def_dice = create_default_def_dice()
     
-    for damage in range(0, num_atk_dice * 2 + 1):
+    for damage in range(1, num_atk_dice * 2 + 1):
         gt_damage_proba = gt_cumulative_damage_proba(atk_dice, def_dice, num_atk_dice, num_def_dice, damage)
         output.insert(tk.INSERT, (str(damage) + '+: ' + str(gt_damage_proba) + '\n'))
         
