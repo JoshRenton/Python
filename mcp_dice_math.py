@@ -24,10 +24,12 @@ class Dice:
     def __init__(self, successful_faces):
         self.successful_faces = successful_faces
 
+    # Removes the input face from the array of successful faces.
     def remove_successful_face(self, face):
         if face in self.successful_faces:
             self.successful_faces.remove(face)
 
+    # Adds the input face to the array of successful faces.
     def add_successful_face(self, face):
         if face not in self.successful_faces:
             self.successful_faces.append(face)
@@ -164,9 +166,11 @@ def gt_cumulative_damage_proba(atk_dice, def_dice, num_atk_dice, num_def_dice, d
 
 def store_current_atk_dice_num(num):
     dice_nums[0] = num
+    all_damage_probabilities()
     
 def store_current_def_dice_num(num):
     dice_nums[1] = num
+    all_damage_probabilities()
 
 dice_nums = [1] * 2
 
@@ -188,8 +192,6 @@ def_dice = tk.IntVar(window)
 def_dice.set(num_dice_array[0])
 def_dice_dd = tk.OptionMenu(window, def_dice, *arange(1, 9, 1), command=store_current_def_dice_num)
 def_dice_dd.grid(row=1, column=3)
-
-tk.Button(window, text='Calculate', command=all_damage_probabilities).grid(row=3, column=2)
 
 output = tk.Text(window)
 output.grid(row=4, column=2)
