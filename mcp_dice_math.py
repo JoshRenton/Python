@@ -90,10 +90,10 @@ def roll_proba(dice, n, k):
         initial_proba = initial_roll(dice, n, i)
         for j in range(0, i + 1):
             crits_proba = initial_crits(dice, i, j)
-            for l in range(0, j + 1):
+            l = k - i
+            if l <= j and l >= 0:
                 crits_success_proba = initial_roll(dice, j, l)
-                if (i + l) == k:
-                    proba += initial_proba * crits_proba * crits_success_proba
+                proba += initial_proba * crits_proba * crits_success_proba
 
     return proba
 
