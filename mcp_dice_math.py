@@ -1,7 +1,9 @@
 from cgitb import text
 from math import factorial
 import tkinter as tk
+from tkinter import ttk
 from turtle import width
+from typing_extensions import IntVar
 
 from numpy import arange
 
@@ -33,6 +35,10 @@ class Dice:
     def add_successful_face(self, face):
         if face not in self.successful_faces:
             self.successful_faces.append(face)
+            
+    # Sets the dices successful faces array.
+    def set_successful_faces(self, new_successful_faces):
+        self.successful_faces = new_successful_faces
 
     # Converts input face string to it's index in face_probas.
     def face_to_index(self, face):
@@ -108,7 +114,7 @@ def gt_cumulative_proba(dice, n, k):
 
     return 1 - cumulative_proba
 
-
+# Returns probability of rolling k or less successes from n dice.
 def lt_cumulative_proba(dice, n, k):
     cumulative_proba = 0.0
     for i in range(0, k + 1):
@@ -134,9 +140,6 @@ def all_damage_probabilities():
     output.delete('1.0', tk.END)
     num_atk_dice = dice_nums[0]
     num_def_dice = dice_nums[1]
-    
-    atk_dice = create_default_atk_dice()
-    def_dice = create_default_def_dice()
     
     for damage in range(1, num_atk_dice * 2 + 1):
         gt_damage_proba = gt_cumulative_damage_proba(atk_dice, def_dice, num_atk_dice, num_def_dice, damage)
@@ -171,31 +174,124 @@ def store_current_atk_dice_num(num):
 def store_current_def_dice_num(num):
     dice_nums[1] = num
     all_damage_probabilities()
+    
+# Creates the options window.
+def create_options_window():
+    options_window = tk.Toplevel(window)
+    
+    tk.Label(options_window, text='Successful Faces (Attack)').grid(row=0, column=0)
+    tk.Label(options_window, text='Successful Faces (Defense)').grid(row=0,column=2)
+    
+    tk.Checkbutton(options_window, text='Hit', variable=atk_cb_hit).grid(row=1, column=0)
+    
+    tk.Checkbutton(options_window, text='Block', variable=atk_cb_block).grid(row=2, column=0)
+
+    tk.Checkbutton(options_window, text='Wild', variable=atk_cb_wild).grid(row=3, column=0)
+    
+    tk.Checkbutton(options_window, text='Crit', variable=atk_cb_crit).grid(row=4, column=0)
+    
+    tk.Checkbutton(options_window, text='Blank', variable=atk_cb_blank).grid(row=5, column=0)
+    
+    tk.Checkbutton(options_window, text='Fail', variable=atk_cb_fail).grid(row=6, column=0)
+    
+    tk.Checkbutton(options_window, text='Hit', variable=def_cb_hit).grid(row=1, column=2)
+    
+    tk.Checkbutton(options_window, text='Block', variable=def_cb_block).grid(row=2, column=2)
+    
+    tk.Checkbutton(options_window, text='Wild', variable=def_cb_wild).grid(row=3, column=2)
+    
+    tk.Checkbutton(options_window, text='Crit', variable=def_cb_crit).grid(row=4, column=2)
+    
+    tk.Checkbutton(options_window, text='Blank', variable=def_cb_blank).grid(row=5, column=2)
+    
+    tk.Checkbutton(options_window, text='Fail', variable=def_cb_fail).grid(row=6, column=2)
+    
+    tk.Button(options_window, text='Update Dice', command=update_dice).grid(row=7, column=1)
+    
+    options_window.grid_columnconfigure(1, minsize=50)
+    
+    options_window.transient(window)
+    options_window.grab_set()
+    window.wait_window(options_window)
+
+def update_dice():
+    updated_atk_dice = []
+    updated_def_dice = []
+    
+    if atk_cb_hit.get() == 1:
+        updated_atk_dice.append('hit')
+    if atk_cb_block.get() == 1:
+        updated_atk_dice.append('block')
+    if atk_cb_wild.get() == 1:
+        updated_atk_dice.append('wild')
+    if atk_cb_crit.get() == 1:
+        updated_atk_dice.append('crit')
+    if atk_cb_blank.get() == 1:
+        updated_atk_dice.append('blank')
+    if atk_cb_fail.get() == 1:
+        updated_atk_dice.append('fail')
+        
+    if def_cb_hit.get() == 1:
+        updated_def_dice.append('hit')
+    if def_cb_block.get() == 1:
+        updated_def_dice.append('block')
+    if def_cb_wild.get() == 1:
+        updated_def_dice.append('wild')
+    if def_cb_crit.get() == 1:
+        updated_def_dice.append('crit')
+    if def_cb_blank.get() == 1:
+        updated_def_dice.append('blank')
+    if def_cb_fail.get() == 1:
+        updated_def_dice.append('fail')
+        
+    atk_dice.set_successful_faces(updated_atk_dice)
+    def_dice.set_successful_faces(updated_def_dice)
+    
+
+window = tk.Tk()
+
+atk_dice = create_default_atk_dice()
+def_dice = create_default_def_dice()
+
+# Initialize checkbox variables.
+atk_cb_hit = tk.IntVar()
+atk_cb_block = tk.IntVar()
+atk_cb_wild = tk.IntVar()
+atk_cb_crit = tk.IntVar()
+atk_cb_blank = tk.IntVar()
+atk_cb_fail = tk.IntVar()
+def_cb_hit = tk.IntVar()
+def_cb_block = tk.IntVar()
+def_cb_wild = tk.IntVar()
+def_cb_crit = tk.IntVar()
+def_cb_blank = tk.IntVar()
+def_cb_fail = tk.IntVar()
 
 dice_nums = [1] * 2
 
 # Window setup.
-window = tk.Tk()
 window.title('MCP Dice Math')
 
 tk.Label(window, text='Attack').grid(row=0, column=1)
 tk.Label(window, text='Defense').grid(row=0, column=3)
 
-num_dice_array = arange(1, 13, 1)
-
-atk_dice = tk.IntVar(window)
-atk_dice.set(num_dice_array[0])
-atk_dice_dd = tk.OptionMenu(window, atk_dice, *num_dice_array, command=store_current_atk_dice_num)
+num_atk_dice = tk.IntVar(window)
+num_atk_dice.set(1)
+atk_dice_dd = tk.OptionMenu(window, num_atk_dice, *arange(1, 13, 1), command=store_current_atk_dice_num)
 atk_dice_dd.grid(row=1, column=1)
 
-def_dice = tk.IntVar(window)
-def_dice.set(num_dice_array[0])
-def_dice_dd = tk.OptionMenu(window, def_dice, *arange(1, 9, 1), command=store_current_def_dice_num)
+num_def_dice = tk.IntVar(window)
+num_def_dice.set(1)
+def_dice_dd = tk.OptionMenu(window, num_def_dice, *arange(1, 9, 1), command=store_current_def_dice_num)
 def_dice_dd.grid(row=1, column=3)
 
 output = tk.Text(window)
+output.bindtags((str(output), str(window), 'all'))
 output.grid(row=4, column=2)
 
+tk.Button(window, text='Options', command=create_options_window).grid(row=3, column=2)
+
+# Set the columns and rows of the window to a minimum size.
 for i in range(0, 5):
     window.grid_columnconfigure(i, minsize=50)
     
