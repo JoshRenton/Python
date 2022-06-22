@@ -7,6 +7,9 @@ from typing_extensions import IntVar
 
 from numpy import arange
 
+# TODO 
+# Rerolls, Blanks on Defense/Attack, Reality Gem, Count Fails on Defense/Attack
+# M.O.D.O.K Psychic Barrier, No Exploding Crits, Crits Not Counting
 
 class Dice:
     # The dices sides along with the probability of that side being rolled.
@@ -79,8 +82,6 @@ def n_choose_k(n, k):
     return factorial(n) / (factorial(k) * factorial(n - k))
 
 # Takes the number of desired crits and number of successes rolled as input and outputs the probability of getting that many crits from that many successes.
-
-
 def initial_crits(dice, num_successes, num_crits):
     total_success_proba = dice.total_expected_proba()
     crit_proba_given_success = (dice.face_probas[3] / total_success_proba)
