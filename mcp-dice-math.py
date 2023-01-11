@@ -193,8 +193,6 @@ def store_current_def_dice_num(num):
     all_damage_probabilities()
 
 # Creates the options window.
-
-
 def create_options_window():
     options_window = tk.Toplevel(window)
 
@@ -308,8 +306,16 @@ dice_nums = [1] * 2
 # Window setup.
 window.title('MCP Dice Math')
 
-tk.Label(window, text='Attack').grid(row=0, column=1)
-tk.Label(window, text='Defense').grid(row=0, column=3)
+input_row = 0
+attack_input_column = 1
+defense_input_column = attack_input_column + 2
+output_row = input_row + 4
+output_column = attack_input_column + 1
+option_button_row = input_row + 3
+option_button_column = output_column
+
+tk.Label(window, text='Attack').grid(row=input_row, column=attack_input_column)
+tk.Label(window, text='Defense').grid(row=input_row, column=defense_input_column)
 
 num_atk_dice = tk.IntVar(window)
 num_atk_dice.set(1)
@@ -325,10 +331,10 @@ def_dice_dd.grid(row=1, column=3)
 
 output = tk.Text(window, width=30, height=25)
 output.bindtags((str(output), str(window), 'all'))
-output.grid(row=4, column=2)
+output.grid(row=output_row, column=output_column)
 
 tk.Button(window, text='Options',
-          command=create_options_window).grid(row=3, column=2)
+          command=create_options_window).grid(row=option_button_row, column=option_button_column)
 
 # Set the columns and rows of the window to a minimum size.
 for i in range(0, 5):
