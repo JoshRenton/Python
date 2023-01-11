@@ -246,6 +246,7 @@ def create_options_window():
 
     options_window.transient(window)
     options_window.grab_set()
+    options_window.resizable(False, False)
     window.wait_window(options_window)
 
 
@@ -335,5 +336,7 @@ for i in range(0, 5):
 
 for i in range(0, 5):
     window.grid_rowconfigure(i, minsize=25)
+
+window.resizable(False, False)
 
 window.mainloop()
